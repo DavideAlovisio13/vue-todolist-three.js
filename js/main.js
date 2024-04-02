@@ -1,7 +1,8 @@
 import * as THREE from 'three';
+//GSAP (GreenSock Animation Platform) è una libreria JavaScript ampiamente utilizzata per creare animazioni fluide e interattive all’interno di pagine web
+import gsap from 'gsap'
+// importiamo i dati
 import { toDoList } from './data.js';
-// La FlakesTexture è una textura che può essere applicata a materiali 3D per simulare la presenza di piccoli frammenti o “fiocchi” sulla superficie. Questi fiocchi possono rappresentare dettagli come graffi, imperfezioni o piccole particelle.
-import { FlakesTexture } from 'three/examples/jsm/textures/FlakesTexture.js';
 // destrutturazione del metodo createApp, mettendola nella variabile vue
 const { createApp } = Vue;
 
@@ -62,6 +63,7 @@ createApp({ //option object
     },
     mounted() {
         console.log(this.toDoList)
+        setTimeout(this.toDoList, 3000)
     } //lifecycle hook, inseriamo un console.log per controllare se this.toDoList funziona
 }).mount('#app')
 
@@ -70,7 +72,7 @@ console.log(THREE)
 
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x757575);
+scene.background = new THREE.Color(0xC89353);
 
 // creiamo gli oggetti di scena, mesh = geometria e materiale
 
@@ -78,33 +80,20 @@ scene.background = new THREE.Color(0x757575);
 const geometry = new THREE.TorusKnotGeometry(20, 1.5, 300, 20, 1, 3);
 // creiamo il materiale, stile con cui il cubo verrà rappresentato in un'ambiente 3D
 // creiamo la texture per il materiale
-/*
-Questa classe THREE.CanvasTextur rappresenta una textura basata su un elemento HTML canvas. In altre parole, puoi disegnare direttamente sulla textura utilizzando il contesto del canvas.
 
-new FlakesTexture(): Questo frammento di codice crea una nuova istanza della classe FlakesTexture che sarà utilizzata per creare una texture a fiocchi*/
-let texture = new THREE.CanvasTexture(new FlakesTexture());
-// come si comporteranno le nostra texture?
-texture.wrapS = THREE.RepeatWrapping; //wrapS si riferisce alla modalità di avvolgimento lungo l’asse S (orizzontale) della texture.
-// THREE.RepeatWrapping indica che la texture dovrebbe ripetersi senza soluzione di continuità quando raggiunge il bordo dell’oggetto a cui è applicata, in pratica per tutta la superfice
-texture.wrapT = THREE.RepeatWrapping;// wrapT si riferisce alla modalità di avvolgimento lungo l’asse T (verticale) della texture.
-// settiamo dumque le ripetizioni 
-texture.repeat.x = 10;
-texture.repeat.y = 10;
 
 // creiamo dunque l'oggetto contenente il materiale e le sue caratteristiche 
 const TorusMaterial = {
     //  Questa proprietà rappresenta lo strato di vernice trasparente sopra il materiale. Un valore di 1.0 indica che il materiale ha uno strato di vernice completo.
-    clearcoat: 1.0,
+    clearcoat: 1,
     // Questa proprietà controlla la rugosità dello strato di vernice trasparente. Un valore di 0.1 indica una superficie leggermente ruvida.
     clearcoatRoughness: 0.1,
     // Questa proprietà rappresenta la quantità di metallo nel materiale. Un valore di 0.9 suggerisce che il materiale è principalmente metallico.
     metalIness: 0.9,
     // Questa proprietà definisce la rugosità generale del materiale. Un valore di 0.5 indica una superficie moderatamente ruvida.
-    roughness: 0.5,
+    roughness: 0,
     // Questa proprietà specifica il colore principale del materiale. Il valore 0x8418ca rappresenta un colore viola.
-    color: 0x0D6EFD,
-    // Questa proprietà è una mappa normale (normal map) che modifica la normale della superficie del materiale. In questo caso, stai utilizzando la texture texture come mappa normale.
-    normalMap: texture,
+    color: 0x3FC3BA,
     // Questa proprietà definisce la scala della mappa normale lungo gli assi X e Y. Un valore di new THREE.Vector2(.15, 0.15) indica una leggera deformazione della normale.
     normalScale: new THREE.Vector2(.15, 0.15)
 }
@@ -128,7 +117,7 @@ scene.add(mesh);
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // fild of view (l'angolo verticale di apertura della nostra inquadratura), aspect ratio(il rapporto tra larghezza e altezza), near plane (da dove la nostra camera inizia a vedere), far plane(da dove la nostra camera finisce di vedere)
 // impostiamo la posizione dalla quale la cam riprenderà 
 
-camera.position.z = 20;
+camera.position.z = 30;
 
 //  reinderizza la nostra scena, tenendo in considerazione che deve:
 //1° deve supportare la trasparenza {alpha: true}
@@ -155,9 +144,9 @@ function renderRate() {
 
     requestAnimationFrame(renderRate);
 
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.01;
-    mesh.rotation.z += 0.01;
+    mesh.rotation.x += 0.001;
+    mesh.rotation.y += 0.001;
+    mesh.rotation.z += 0.001;
     mesh.rotation.order = 'YXZ';
 
 }
@@ -181,6 +170,16 @@ const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
 dirLight.position.set(1, 1, 100); // 
 scene.add(dirLight);
 
+
+// animazioni elementi su eventi
+function animation() {
+    gsap.to(mesh.scale, { duration: 2, x: 2, y: 2, z: 2 })// primo par target, secondo durata e gli dobbiamo dire qual'è lo stadio finale della animazione, i valori che dopo un secondo deviono essere modificati e in che modo
+    gsap.to(mesh.rotation, { duration: 2, x: 1, y: 1, z: 1 })// rotazione
+    gsap.fromTo('#app', { opacity: 0 }, { opacity: 1, duration: 5 })
+}
+
+//settiamo quando avverrà 
+window.addEventListener('load', animation);
 
 
 
