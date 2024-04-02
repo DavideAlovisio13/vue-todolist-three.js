@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 //GSAP (GreenSock Animation Platform) è una libreria JavaScript ampiamente utilizzata per creare animazioni fluide e interattive all’interno di pagine web
 import gsap from 'gsap'
-// importiamo i dati
+// importiamo i dati per la nostra applicazione 
 import { toDoList } from './data.js';
 // destrutturazione del metodo createApp, mettendola nella variabile vue
 const { createApp } = Vue;
@@ -76,13 +76,10 @@ scene.background = new THREE.Color(0xC89353);
 
 // creiamo gli oggetti di scena, mesh = geometria e materiale
 
-// const geometry = new THREE.BoxGeometry(1, 1, 1);// larghezza, altezza, profondità
 const geometry = new THREE.TorusKnotGeometry(20, 1.5, 300, 20, 1, 3);
 // creiamo il materiale, stile con cui il cubo verrà rappresentato in un'ambiente 3D
-// creiamo la texture per il materiale
 
-
-// creiamo dunque l'oggetto contenente il materiale e le sue caratteristiche 
+// creiamo l'oggetto contenente il materiale e le sue caratteristiche 
 const TorusMaterial = {
     //  Questa proprietà rappresenta lo strato di vernice trasparente sopra il materiale. Un valore di 1.0 indica che il materiale ha uno strato di vernice completo.
     clearcoat: 1,
@@ -98,7 +95,7 @@ const TorusMaterial = {
     normalScale: new THREE.Vector2(.15, 0.15)
 }
 
-// passiamo il colore con il quale andare a colorare il cubo e il testo
+// passiamo l'oggetto contente il materiale e le sue caratteristiche all'istanza del materiale
 const material = new THREE.MeshPhysicalMaterial(TorusMaterial); //  Questa classe rappresenta un materiale fisico che può essere applicato a oggetti 3D nella tua scena. I materiali fisici sono progettati per simulare le proprietà dei materiali reali, come la riflessione, la trasmissione della luce e la rugosità della superficie.
 
 // creiamo la mesh da aggiungere all'iterno della scena
@@ -106,15 +103,26 @@ const material = new THREE.MeshPhysicalMaterial(TorusMaterial); //  Questa class
 // const mesh = new THREE.Mesh(geometry, material); // passiamo la geometria e il materiale
 const mesh = new THREE.Mesh(geometry, material);
 
+//posizionamento dell'oggetto
+
+// possiamo spostare il nostro oggetto all'interno della scena
+const pos = new THREE.Vector3(-10, -10, 1);// creiamo un istanza con un vettore che possiede con attributi i 3 assi 
+//assegnamo la posizione alla mesh
+mesh.position.add(pos);
+
+// inserimento luci della scena
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
+dirLight.position.set(1, 1, 100); // 
+
 // aggiungiamo la mesh alla scena
 
-scene.add(mesh);
+scene.add(mesh, dirLight);
 
 
 // lascena deve essere ripresa da una cam, punto di osservazione (camera prospettica)
 
-
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000); // fild of view (l'angolo verticale di apertura della nostra inquadratura), aspect ratio(il rapporto tra larghezza e altezza), near plane (da dove la nostra camera inizia a vedere), far plane(da dove la nostra camera finisce di vedere)
+
 // impostiamo la posizione dalla quale la cam riprenderà 
 
 camera.position.z = 30;
@@ -125,7 +133,7 @@ camera.position.z = 30;
 
 const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
 
-// prima di reinderizzare dobbiamo andare a dire il campo di visione da reinderizzara
+// prima di reinderizzare dobbiamo andare a dire al nostro renderer il campo di visione da reinderizzara
 
 renderer.setSize(window.innerWidth, window.innerHeight);
 
@@ -142,7 +150,8 @@ function renderRate() {
 
     // deve chiamare se stessa seguendo il framerate del monitor dell'utente
 
-    requestAnimationFrame(renderRate);
+    requestAnimationFrame(renderRate); // è un metodo utilizzato in JavaScript per gestire le animazioni e migliorare le prestazioni delle animazioni all’interno del browser.  Viene chiamata con un parametro callback, che è la funzione che desideri eseguire per aggiornare un’animazione prima del prossimo ridisegno della pagina123.
+
 
     mesh.rotation.x += 0.001;
     mesh.rotation.y += 0.001;
@@ -158,24 +167,11 @@ requestAnimationFrame(renderRate);
 // frame loop, 60 volte al minuto aggiurna il canvas generando un nuovo frame
 
 
-//posizionamento dell'oggetto
-
-// possiamo spostare il nostro oggetto all'interno della scena
-const pos = new THREE.Vector3(-10, -10, 1);// creiamo un istanza con un vettore che possiede con attributi i 3 assi 
-//assegnamo la posizione alla mesh
-mesh.position.add(pos);
-
-// inserimento luci della scena
-const dirLight = new THREE.DirectionalLight(0xffffff, 0.5);
-dirLight.position.set(1, 1, 100); // 
-scene.add(dirLight);
-
-
 // animazioni elementi su eventi
 function animation() {
     gsap.to(mesh.scale, { duration: 2, x: 2, y: 2, z: 2 })// primo par target, secondo durata e gli dobbiamo dire qual'è lo stadio finale della animazione, i valori che dopo un secondo deviono essere modificati e in che modo
     gsap.to(mesh.rotation, { duration: 2, x: 1, y: 1, z: 1 })// rotazione
-    gsap.fromTo('#app', { opacity: 0 }, { opacity: 1, duration: 5 })
+    gsap.fromTo('#app', { opacity: 0 }, { opacity: 1, duration: 5 }) // da una condizione ad un'altra nell'arco di un tempo indicato 
 }
 
 //settiamo quando avverrà 
