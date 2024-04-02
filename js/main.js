@@ -68,22 +68,24 @@ console.log(THREE)
 
 
 const scene = new THREE.Scene();
+scene.background = new THREE.Color( 0xf1f1f1 );
 
 // creiamo gli oggetti di scena, mesh = geometria e materiale
 
 // const geometry = new THREE.BoxGeometry(1, 1, 1);// larghezza, altezza, profondità
-const geometry = new THREE.TorusKnotGeometry( 10, 3, 100, 16 );
+const geometry = new THREE.TorusKnotGeometry(10, 2, 300, 20, 5, 6);
 // creiamo il materiale, stile con cui il cubo verrà rappresentato in un'ambiente 3D
 
- // passiamo il colore con il quale andare a colorare il cubo
-const material = new THREE.MeshNormalMaterial;// in questo caso ho usato il normalMaterial per il colore giusto per dare l'idea di profondità
+// passiamo il colore con il quale andare a colorare il cubo
+const material = new THREE.MeshNormalMaterial();// in questo caso ho usato il normalMaterial per il colore giusto per dare l'idea di profondità
 // creiamo la mesh da aggiungere all'iterno della scena
 
 // const mesh = new THREE.Mesh(geometry, material); // passiamo la geometria e il materiale
-const torusKnot = new THREE.Mesh( geometry, material );
+const mesh = new THREE.Mesh(geometry, material);
+
 // aggiungiamo la mesh alla scena
 
-scene.add(torusKnot);
+scene.add(mesh);
 
 
 // lascena deve essere ripresa da una cam, punto di osservazione (camera prospettica)
@@ -111,27 +113,29 @@ document.body.appendChild(renderer.domElement); // il canvas è contenuto nella 
 function renderRate() {
     // andiamo a inserire il nostro primo render all'interno
     renderer.render(scene, camera);
-  
-    torusKnot2.rotation.x += 0.001;
-    torusKnot2.rotation.y += 0.001;
-    torusKnot2.rotation.z += 0.001;
-    torusKnot2.rotation.order = 'YXZ';
-  
+
     // deve chiamare se stessa seguendo il framerate del monitor dell'utente
-  
-    requestAnimationFrame(renderRate);// re
-  
-  }
-  
-  // faccimo il loop
-  
-  requestAnimationFrame(renderRate);
-  
-  // frame loop, 60 volte al minuto aggiurna il canvas generando un nuovo frame
-  
 
-  //posizionamento dell'oggetto
+    requestAnimationFrame(renderRate);
 
-  // possiamo spostare il nostro oggetto all'interno della scena
-  
-  
+    mesh.rotation.x += 0.01;
+    mesh.rotation.y += 0.01;
+    mesh.rotation.z += 0.01;
+    mesh.rotation.order = 'YXZ';
+
+}
+
+// faccimo il loop
+
+requestAnimationFrame(renderRate);
+
+// frame loop, 60 volte al minuto aggiurna il canvas generando un nuovo frame
+
+
+//posizionamento dell'oggetto
+
+// possiamo spostare il nostro oggetto all'interno della scena
+const pos = new THREE.Vector3(-40, -20,);// creiamo un istanza con un vettore che possiede con attributi i 3 assi 
+//assegnamo la posizione alla mesh
+mesh.position.add(pos);
+
