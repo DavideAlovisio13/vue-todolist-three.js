@@ -3,3 +3,17 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+#maintext {
+    position: absolute;
+	top: 10px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+}
+
+.testtitle {
+    font-size: 5em;
+    color: #0d6efd;
+}
