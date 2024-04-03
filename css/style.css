@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+#maintext {
+    position: absolute;
+	top: 10px;
+	width: 100%;
+	text-align: center;
+	z-index: 100;
+	display:block;
+}
+
+.textBabas{
+    font-family: "Bebas Neue", sans-serif;
+    color: white;
+}
+
+.testtitle {
+    font-size: 15em;
+    font-weight: bold;
+}
+.opacity {
+    animation-name: opacity;
+    animation-duration: 1s;
+}
+
+@keyframes opacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
